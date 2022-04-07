@@ -1,0 +1,3 @@
+displayName = Sane Randomizer
+author = Kabaril
+version = 0.7
