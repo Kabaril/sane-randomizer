@@ -17,7 +17,6 @@ Sane Randomizer randomizes the following things:
 - Armor Values
 - item drops (excluding Bosses)
 
-Item drops are bugged and are added onto existing drops
 Item drops do not support modded items and enemies
 Trade items do not support modded items
 

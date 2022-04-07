@@ -2,31 +2,30 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent.ItemDropRules;
 
 namespace SaneRandomizer
 {
     public class RandomGlobalNPC : GlobalNPC
     {
-        public override void NPCLoot(NPC npc)
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
             if (!SaneRandomizer.Instance.Config.Drops)
             {
-                base.NPCLoot(npc);
+                base.ModifyNPCLoot(npc, npcLoot);
                 return;
             }
             if (SaneRandomizer.Instance.DropTable.ContainsKey(npc.type))
             {
-                foreach(var chance in SaneRandomizer.Instance.DropTable[npc.type])
+                npcLoot.RemoveWhere((x) => true, false);
+                foreach (var chance in SaneRandomizer.Instance.DropTable[npc.type])
                 {
-                    if(Main.rand.Next(0, 10000) < chance.Item2)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, chance.Item1);
-                    }
+                    npcLoot.Add(ItemDropRule.Common(chance.Item1, chance.Item2));
                 }
             }
             else
             {
-                base.NPCLoot(npc);
+                base.ModifyNPCLoot(npc, npcLoot);
             }
         }
 

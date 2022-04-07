@@ -48,6 +48,7 @@ namespace SaneRandomizer
         public override void Unload()
         {
             Logger.Info("Unloading Sane Randomizer");
+            SaneRandomizerConfig.Instance = null;
             Random = null;
             Config = null;
             DropTable = null;
@@ -106,7 +107,7 @@ namespace SaneRandomizer
                 int item_index = Random.Next(item_count);
                 int item = items[item_index];
                 selected_items.Add(item);
-                int chance = Random.Next(3, 1000);
+                int chance = Random.Next(2, 197);
                 AddToDropTable(npc, item, chance);
             }
 
@@ -114,7 +115,7 @@ namespace SaneRandomizer
 
             foreach (int item in unassigned)
             {
-                int chance = Random.Next(3, 1000);
+                int chance = Random.Next(10, 197);
                 int npc_index = Random.Next(npc_count);
                 int npc = npcs[npc_index];
                 AddToDropTable(npc, item, chance);

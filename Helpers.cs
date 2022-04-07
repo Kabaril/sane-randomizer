@@ -692,7 +692,7 @@ namespace SaneRandomizer
         public static void Save(ModConfig config)
         {
             Directory.CreateDirectory(ConfigManager.ModConfigPath);
-            string filename = config.mod.Name + "_" + config.Name + ".json";
+            string filename = config.Mod.Name + "_" + config.Name + ".json";
             string path = Path.Combine(ConfigManager.ModConfigPath, filename);
             string json = JsonConvert.SerializeObject(config, ConfigManager.serializerSettings);
             File.WriteAllText(path, json);
