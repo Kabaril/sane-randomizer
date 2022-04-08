@@ -26,9 +26,9 @@ namespace SaneRandomizer
         public bool Trade;
 
         [Label("Drops")]
-        [Tooltip("Randomize Dropped Items by Vanilla Enemies, except Bosses")]
+        [Tooltip("Randomize Dropped Loot from enemies, except Bosses")]
         [ReloadRequired]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool Drops;
 
 

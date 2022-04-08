@@ -18,9 +18,9 @@ namespace SaneRandomizer
             if (SaneRandomizer.Instance.DropTable.ContainsKey(npc.type))
             {
                 npcLoot.RemoveWhere((x) => true, false);
-                foreach (var chance in SaneRandomizer.Instance.DropTable[npc.type])
+                foreach (IItemDropRule drop in SaneRandomizer.Instance.DropTable[npc.type])
                 {
-                    npcLoot.Add(ItemDropRule.Common(chance.Item1, chance.Item2));
+                    npcLoot.Add(drop);
                 }
             }
             else

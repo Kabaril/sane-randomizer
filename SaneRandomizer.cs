@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Terraria.ModLoader;
 using System.Linq;
 using Terraria.ID;
+using Terraria;
+using Terraria.GameContent.ItemDropRules;
 
 namespace SaneRandomizer
 {
@@ -11,8 +13,8 @@ namespace SaneRandomizer
         public Random Random;
         public SaneRandomizerConfig Config;
 
-        //NPC Type -> drop type, weight (how many in 10.000)
-        public Dictionary<int, Tuple<int, int>[]> DropTable;
+        //NPC Type -> drop rule array
+        public Dictionary<int, IItemDropRule[]> DropTable;
 
         //NPC Type -> item types
         public Dictionary<int, int[]> TradeTable;
@@ -57,17 +59,17 @@ namespace SaneRandomizer
             Instance = null;
         }
 
-        private void AddToDropTable(int npc, int item, int chance)
+        private void AddToDropTable(int npc, IItemDropRule item)
         {
             if (DropTable.ContainsKey(npc))
             {
-                List<Tuple<int, int>> values = new List<Tuple<int, int>>(DropTable[npc]);
-                values.Add(new Tuple<int, int>(item, chance));
+                List<IItemDropRule> values = new List<IItemDropRule>(DropTable[npc]);
+                values.Add(item);
                 DropTable[npc] = values.ToArray();
             }
             else
             {
-                DropTable.Add(npc, new Tuple<int, int>[] { new Tuple<int, int>(item, chance) });
+                DropTable.Add(npc, new IItemDropRule[] { item });
             }
         }
 
@@ -83,42 +85,138 @@ namespace SaneRandomizer
 
         private void RandomizeDrops()
         {
-            DropTable = new Dictionary<int, Tuple<int, int>[]>();
-            List<int> pre_hardmode_npcs = new List<int>(Helpers.PreHardmodeNPCs);
-            List<int> pre_hardmode_items = new List<int>(Helpers.PreHardmodeItems);
-            RandomizeDropTables(pre_hardmode_npcs, pre_hardmode_items);
-            List<int> pre_plantera_npcs = new List<int>(Helpers.PrePlanteraNPCs);
-            List<int> pre_plantera_items = new List<int>(Helpers.PrePlanteraItems);
-            RandomizeDropTables(pre_plantera_npcs, pre_plantera_items);
-            List<int> post_plantera_npcs = new List<int>(Helpers.PostPlanteraNPCs);
-            List<int> post_plantera_items = new List<int>(Helpers.PostPlanteraItems);
-            RandomizeDropTables(post_plantera_npcs, post_plantera_items);
+            DropTable = new Dictionary<int, IItemDropRule[]>();
+            int npc_count = NPCID.Search.Count;
+            List<string> names = new List<string>();
+            List<int> pre_hardmode_npcs = new List<int>();
+            //List<object> pre_hardmode_debug = new List<object>();
+            List<IItemDropRule> pre_hardmode_drops = new List<IItemDropRule>();
+            List<int> post_hardmode_npcs = new List<int>();
+            //List<object> post_hardmode_debug = new List<object>();
+            List<IItemDropRule> post_hardmode_drops = new List<IItemDropRule>();
+            List<int> post_plantera_npcs = new List<int>();
+            List<IItemDropRule> post_plantera_drops = new List<IItemDropRule>();
+            //List<object> post_plantera_debug = new List<object>();
+            for (int i = 0; i < npc_count; i++)
+            {
+                if (Helpers.ExcludedEnemies.Contains(i))
+                {
+                    continue;
+                }
+                NPC npc = new NPC();
+                npc.SetDefaults(i);
+                if (npc.boss)
+                {
+                    continue;
+                }
+                if(npc.friendly)
+                {
+                    continue;
+                }
+                if(npc.immortal)
+                {
+                    continue;
+                }
+                if(npc.aiStyle == NPCAIStyleID.Spell)
+                {
+                    continue;
+                }
+                if(npc.aiStyle == NPCAIStyleID.Spore)
+                {
+                    continue;
+                }
+                if(npc.aiStyle == NPCAIStyleID.Worm)
+                {
+                    if(names.Contains(npc.FullName))
+                    {
+                        continue;
+                    }
+                }
+
+                int damage = npc.damage;
+                if (damage == 0)
+                {
+                    continue;
+                }
+                int max_life = npc.lifeMax;
+                int defense = npc.defense;
+                float combat_rating = (float)(damage * 5f) + (max_life / 5f) + (defense * 3f);
+
+                List<IItemDropRule> drops = Main.ItemDropsDB.GetRulesForNPCID(i, false);
+
+                names.Add(npc.FullName);
+
+                if(Helpers.OverrideEnemyPreHardmode.Contains(i))
+                {
+                    pre_hardmode_npcs.Add(i);
+                    pre_hardmode_drops.AddRange(drops);
+                    //pre_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                    continue;
+                }
+
+                if (Helpers.OverrideEnemyPostHardmode.Contains(i))
+                {
+                    post_hardmode_npcs.Add(i);
+                    post_hardmode_drops.AddRange(drops);
+                    //post_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                    continue;
+                }
+
+                if (Helpers.OverrideEnemyPostPlantera.Contains(i))
+                {
+                    post_plantera_npcs.Add(i);
+                    post_plantera_drops.AddRange(drops);
+                    //post_plantera_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                    continue;
+                }
+
+                if (combat_rating < 300f)
+                {
+                    pre_hardmode_npcs.Add(i);
+                    pre_hardmode_drops.AddRange(drops);
+                    //pre_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                    continue;
+                }
+                if(combat_rating < 900f)
+                {
+                    post_hardmode_npcs.Add(i);
+                    post_hardmode_drops.AddRange(drops);
+                    //post_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                    continue;
+                }
+                post_plantera_npcs.Add(i);
+                post_plantera_drops.AddRange(drops);
+                //post_plantera_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                //npc basierend auf health, damage, etc in gamestage einordnen und drops aus db in gamestage schreiben
+            }
+
+            RandomizeDropTables(pre_hardmode_npcs, pre_hardmode_drops);
+            RandomizeDropTables(post_hardmode_npcs, post_hardmode_drops);
+            RandomizeDropTables(post_plantera_npcs, post_plantera_drops);
         }
 
-        private void RandomizeDropTables(List<int> npcs, List<int> items)
+        private void RandomizeDropTables(List<int> npcs, List<IItemDropRule> drops)
         {
-            int item_count = items.Count;
+            int item_count = drops.Count;
             int npc_count = npcs.Count;
 
-            List<int> selected_items = new List<int>();
+            List<IItemDropRule> selected_items = new List<IItemDropRule>();
 
             foreach (int npc in npcs)
             {
                 int item_index = Random.Next(item_count);
-                int item = items[item_index];
+                IItemDropRule item = drops.ElementAt(item_index);
                 selected_items.Add(item);
-                int chance = Random.Next(2, 197);
-                AddToDropTable(npc, item, chance);
+                AddToDropTable(npc, item);
             }
 
-            var unassigned = items.Except(selected_items);
+            var unassigned = drops.Except(selected_items);
 
-            foreach (int item in unassigned)
+            foreach (IItemDropRule item in unassigned)
             {
-                int chance = Random.Next(10, 197);
                 int npc_index = Random.Next(npc_count);
                 int npc = npcs[npc_index];
-                AddToDropTable(npc, item, chance);
+                AddToDropTable(npc, item);
             }
         }
 
