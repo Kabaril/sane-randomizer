@@ -15,6 +15,7 @@ namespace SaneRandomizer
         [Label("Randomizer Seed")]
         [Tooltip("Seed used for randomizing everything")]
         [ReloadRequired]
+        [Range(int.MinValue, int.MaxValue)]
         [DefaultValue(0)]
         public int Seed;
 
@@ -30,7 +31,6 @@ namespace SaneRandomizer
         [ReloadRequired]
         [DefaultValue(true)]
         public bool Drops;
-
 
         [Label("Damage")]
         [Tooltip("Randomize Damage of all Items")]
@@ -101,5 +101,20 @@ namespace SaneRandomizer
         [Tooltip("Randomize Armor Values of all Items")]
         [DefaultValue(true)]
         public bool ArmorValues;
+
+        [Label("NPC Life")]
+        [Tooltip("Randomize Maximum Life of NPCs (excluding Bosses)")]
+        [DefaultValue(true)]
+        public bool NPCLife;
+
+        [Label("NPC Damage")]
+        [Tooltip("Randomize Damage of NPCs (excluding Bosses)")]
+        [DefaultValue(true)]
+        public bool NPCDamage;
+
+        [Label("NPC Armor")]
+        [Tooltip("Randomize Armor of NPCs (excluding Bosses)")]
+        [DefaultValue(true)]
+        public bool NPCArmor;
     }
 }

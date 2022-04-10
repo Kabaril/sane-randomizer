@@ -8,6 +8,33 @@ namespace SaneRandomizer
 {
     public class RandomGlobalNPC : GlobalNPC
     {
+        public override void SetDefaults(NPC npc)
+        {
+            base.SetDefaults(npc);
+            if (SaneRandomizer.Instance is null)
+            {
+                return;
+            }
+            if (!SaneRandomizer.Instance.NPCModifierTable.ContainsKey(npc.type))
+            {
+                return;
+            }
+            SaneRandomizerConfig config = SaneRandomizer.Instance.Config;
+            NPCBaseModifier mod = SaneRandomizer.Instance.NPCModifierTable[npc.type];
+            if (config.NPCDamage)
+            {
+                npc.damage = (int)(npc.damage * (mod.DamageModifier / 100f));
+            }
+            if (config.NPCArmor)
+            {
+                npc.defense = (int)(npc.defense * (mod.DefenseModifier / 100f));
+            }
+            if (config.NPCLife)
+            {
+                npc.lifeMax = (int)(npc.lifeMax * (mod.MaxLifeModifier / 100f));
+            }
+        }
+
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
             if (!SaneRandomizer.Instance.Config.Drops)

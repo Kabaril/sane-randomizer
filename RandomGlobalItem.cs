@@ -8,6 +8,10 @@ namespace SaneRandomizer
         public override void SetDefaults(Item item)
         {
             base.SetDefaults(item);
+            if(SaneRandomizer.Instance is null)
+            {
+                return;
+            }
             if(!SaneRandomizer.Instance.ItemModifierTable.ContainsKey(item.type))
             {
                 return;

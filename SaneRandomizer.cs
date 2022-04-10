@@ -21,6 +21,8 @@ namespace SaneRandomizer
 
         public Dictionary<int, ItemBaseModifier> ItemModifierTable;
 
+        public Dictionary<int, NPCBaseModifier> NPCModifierTable;
+
         // Automatically set by tModLoader
         public static SaneRandomizer Instance;
 
@@ -43,6 +45,9 @@ namespace SaneRandomizer
             RandomizeTrades();
             Logger.Info("Creating Item Modification Table");
             RandomizeItemValues();
+            Logger.Info("Creating NPC Modification Table");
+            //MUST BE AFTER DROPS
+            RandomizeNPCValues();
 
             Instance = this;
         }
@@ -57,6 +62,36 @@ namespace SaneRandomizer
             TradeTable = null;
             ItemModifierTable = null;
             Instance = null;
+            NPCModifierTable = null;
+        }
+
+        private void RandomizeNPCValues()
+        {
+            NPCModifierTable = new Dictionary<int, NPCBaseModifier>();
+            int npc_count = NPCID.Search.Count;
+            for (int i = 0; i < npc_count; i++)
+            {
+                if (Helpers.ExcludedEnemies.Contains(i))
+                {
+                    continue;
+                }
+                NPC npc = new NPC();
+                npc.SetDefaults(i);
+                if (npc.boss)
+                {
+                    continue;
+                }
+                if( npc.lifeMax < 10)
+                {
+                    continue;
+                }
+                if (npc.immortal)
+                {
+                    continue;
+                }
+                NPCBaseModifier mod = new NPCBaseModifier(Random);
+                NPCModifierTable.Add(i, mod);
+            }
         }
 
         private void AddToDropTable(int npc, IItemDropRule item)

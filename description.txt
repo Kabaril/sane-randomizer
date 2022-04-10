@@ -1,6 +1,6 @@
 Sane Randomizer randomizes the following things:
 
-- trade items
+- Trade items
 - Weapon Damage
 - Weapon Shoot Speed
 - Weapon Knockback
@@ -15,7 +15,10 @@ Sane Randomizer randomizes the following things:
 - Potion Heal Values
 - Potion Mana Values
 - Armor Values
-- item drops (excluding Bosses)
+- Item drops (excluding Bosses)
+- Armor of NPCs (excluding Bosses)
+- Damage of NPCs (excluding Bosses)
+- Maximum Life of NPCs (excluding Bosses)
 
 Item drops now support modded items and enemies, thanks 1.4!
 Trade items do not currently support modded items, disabled by default
