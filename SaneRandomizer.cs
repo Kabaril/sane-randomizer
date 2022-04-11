@@ -36,20 +36,6 @@ namespace SaneRandomizer
                 Helpers.Save(Config);
             }
             Random = new Random(Config.Seed);
-
-            //start randomizing
-            ItemModifierTable = new Dictionary<int, ItemBaseModifier>();
-            Logger.Info("Creating Drop Tables");
-            RandomizeDrops();
-            Logger.Info("Creating Trade Tables");
-            RandomizeTrades();
-            Logger.Info("Creating Item Modification Table");
-            RandomizeItemValues();
-            Logger.Info("Creating NPC Modification Table");
-            //MUST BE AFTER DROPS
-            RandomizeNPCValues();
-
-            Instance = this;
         }
 
         public override void Unload()
@@ -65,10 +51,26 @@ namespace SaneRandomizer
             NPCModifierTable = null;
         }
 
+        public override void PostSetupContent()
+        {
+            //start randomizing
+            Logger.Info("Creating Drop Tables");
+            RandomizeDrops();
+            Logger.Info("Creating Trade Tables");
+            RandomizeTrades();
+            Logger.Info("Creating Item Modification Table");
+            RandomizeItemValues();
+            Logger.Info("Creating NPC Modification Table");
+            //MUST BE AFTER DROPS
+            RandomizeNPCValues();
+
+            Instance = this;
+        }
+
         private void RandomizeNPCValues()
         {
             NPCModifierTable = new Dictionary<int, NPCBaseModifier>();
-            int npc_count = NPCID.Search.Count;
+            int npc_count = NPCID.Search.Names.Count();
             for (int i = 0; i < npc_count; i++)
             {
                 if (Helpers.ExcludedEnemies.Contains(i))
@@ -76,12 +78,27 @@ namespace SaneRandomizer
                     continue;
                 }
                 NPC npc = new NPC();
-                npc.SetDefaults(i);
+                try
+                {
+                    npc.SetDefaults(i);
+                } catch (Exception e)
+                {
+                    if (npc.FullName is null)
+                    {
+                        //something went horribly wrong, skip this npc
+                        Logger.Warn("Sane Randomizer: Skipped NPC " + i + " could not set Defaults");
+                        continue;
+                    }
+                }
                 if (npc.boss)
                 {
                     continue;
                 }
                 if( npc.lifeMax < 10)
+                {
+                    continue;
+                }
+                if (npc.lifeMax > (int.MaxValue / 2))
                 {
                     continue;
                 }
@@ -110,6 +127,7 @@ namespace SaneRandomizer
 
         private void RandomizeItemValues()
         {
+            ItemModifierTable = new Dictionary<int, ItemBaseModifier>();
             int item_count = ItemLoader.ItemCount;
             for(int i = 1; i < item_count; i++)
             {
@@ -121,7 +139,7 @@ namespace SaneRandomizer
         private void RandomizeDrops()
         {
             DropTable = new Dictionary<int, IItemDropRule[]>();
-            int npc_count = NPCID.Search.Count;
+            int npc_count = NPCID.Search.Names.Count();
             List<string> names = new List<string>();
             List<int> pre_hardmode_npcs = new List<int>();
             //List<object> pre_hardmode_debug = new List<object>();
@@ -139,7 +157,21 @@ namespace SaneRandomizer
                     continue;
                 }
                 NPC npc = new NPC();
-                npc.SetDefaults(i);
+                try
+                {
+                    NPCSpawnParams param = new NPCSpawnParams();
+                    param.strengthMultiplierOverride = 1f;
+                    param.playerCountForMultiplayerDifficultyOverride = 1;
+                    npc.SetDefaults(i, param);
+                } catch(Exception e)
+                {
+                    if(npc.FullName is null)
+                    {
+                        //something went horribly wrong, skip this npc
+                        Logger.Warn("Sane Randomizer: Skipped NPC " + i + " could not set Defaults");
+                        continue;
+                    }
+                }
                 if (npc.boss)
                 {
                     continue;

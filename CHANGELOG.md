@@ -15,6 +15,10 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [1.2] - 2022-04-11
+### Fixed
+- Improved Cross-Mod Compatability
+
 
 ## [1.1] - 2022-04-10
 ### Added
