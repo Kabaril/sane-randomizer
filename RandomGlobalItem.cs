@@ -82,7 +82,7 @@ namespace SaneRandomizer
             {
                 if (config.FishingRodPower)
                 {
-                    item.fishingPole = (int)(item.fishingPole * (mod.BaitPowerModifier / 100f));
+                    item.fishingPole = (int)(item.fishingPole * (mod.FishingRodPowerModifier / 100f));
                 }
             }
         }

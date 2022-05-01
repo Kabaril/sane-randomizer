@@ -15,6 +15,10 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [1.4] - 2022-05-01
+### Added
+- Options for Limits of Randomizer
+
 ## [1.3] - 2022-04-30
 ### Fixed
 - Workshop File Size (see https://github.com/tModLoader/tModLoader/issues/2263)

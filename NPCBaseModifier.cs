@@ -10,11 +10,11 @@ namespace SaneRandomizer
 
         public int DefenseModifier;
 
-        public NPCBaseModifier(Random random)
+        public NPCBaseModifier(Random random, MinMaxTable table)
         {
-            DamageModifier = random.Next(50, 200);
-            MaxLifeModifier = random.Next(50, 200);
-            DefenseModifier = random.Next(50, 200);
+            DamageModifier = random.Next(table.NPCDamageMinimum, table.NPCDamageMaximum);
+            MaxLifeModifier = random.Next(table.NPCLifeMinimum, table.NPCLifeMaximum);
+            DefenseModifier = random.Next(table.NPCArmorMinimum, table.NPCArmorMaximum);
         }
     }
 }

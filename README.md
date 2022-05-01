@@ -29,7 +29,7 @@ Trade items do not currently support modded items, disabled by default
 All Randomizations are Seeded and only change when the Seed (in Mod Options) changes.
 
 Item Drops are separated into Pre-Hardmode, Post-Hardmode and Post-Plantera.
-Random Values are 50% - 200% of base value.
+Random Values are 50% - 200% of base value. (Configurable)
 
 The Mechanic is not randomized.
 

@@ -53,21 +53,22 @@ namespace SaneRandomizer
 
         public override void PostSetupContent()
         {
+            MinMaxTable minMaxTable = new MinMaxTable(Config);
             //start randomizing
             Logger.Info("Creating Drop Tables");
             RandomizeDrops();
             Logger.Info("Creating Trade Tables");
             RandomizeTrades();
             Logger.Info("Creating Item Modification Table");
-            RandomizeItemValues();
+            RandomizeItemValues(minMaxTable);
             Logger.Info("Creating NPC Modification Table");
             //MUST BE AFTER DROPS
-            RandomizeNPCValues();
+            RandomizeNPCValues(minMaxTable);
 
             Instance = this;
         }
 
-        private void RandomizeNPCValues()
+        private void RandomizeNPCValues(MinMaxTable minMaxTable)
         {
             NPCModifierTable = new Dictionary<int, NPCBaseModifier>();
             int npc_count = NPCID.Search.Names.Count();
@@ -106,7 +107,7 @@ namespace SaneRandomizer
                 {
                     continue;
                 }
-                NPCBaseModifier mod = new NPCBaseModifier(Random);
+                NPCBaseModifier mod = new NPCBaseModifier(Random, minMaxTable);
                 NPCModifierTable.Add(i, mod);
             }
         }
@@ -125,13 +126,13 @@ namespace SaneRandomizer
             }
         }
 
-        private void RandomizeItemValues()
+        private void RandomizeItemValues(MinMaxTable minMaxTable)
         {
             ItemModifierTable = new Dictionary<int, ItemBaseModifier>();
             int item_count = ItemLoader.ItemCount;
             for(int i = 1; i < item_count; i++)
             {
-                ItemBaseModifier mod = new ItemBaseModifier(Random);
+                ItemBaseModifier mod = new ItemBaseModifier(Random, minMaxTable);
                 ItemModifierTable.Add(i, mod);
             }
         }
