@@ -71,7 +71,7 @@ namespace SaneRandomizer
         private void RandomizeNPCValues(MinMaxTable minMaxTable)
         {
             NPCModifierTable = new Dictionary<int, NPCBaseModifier>();
-            int npc_count = NPCID.Search.Names.Count();
+            int npc_count = NPCLoader.NPCCount;
             for (int i = 0; i < npc_count; i++)
             {
                 if (Helpers.ExcludedEnemies.Contains(i))
