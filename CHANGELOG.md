@@ -15,6 +15,8 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [1.7] - 2022-06-07
+
 ## [1.6] - 2022-05-18
 ### Fixed
 - Fixed NPC Loading
