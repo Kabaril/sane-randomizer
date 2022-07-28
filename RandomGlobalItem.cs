@@ -1,10 +1,25 @@
 ﻿using Terraria;
+using System.Collections.Generic;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SaneRandomizer
 {
     public class RandomGlobalItem : GlobalItem
     {
+        private static readonly List<int> use_time_excluded = new List<int>
+        {
+            ItemID.MagicMirror,
+            ItemID.BugNet,
+            ItemID.FireproofBugNet,
+            ItemID.GoldenBugNet,
+            ItemID.RecallPotion,
+            ItemID.CellPhone,
+            ItemID.TeleportationPotion,
+            ItemID.IceMirror,
+            ItemID.RodofDiscord
+        };
+
         public override void SetDefaults(Item item)
         {
             base.SetDefaults(item);
@@ -42,7 +57,7 @@ namespace SaneRandomizer
             {
                 item.knockBack *= (mod.KnockBackModifier / 100f);
             }
-            if (config.UseTime)
+            if (config.UseTime && !use_time_excluded.Contains(item.type))
             {
                 item.useAnimation = (int)(item.useAnimation * (mod.UseTimeModifier / 100f));
                 item.useTime = (int)(item.useTime * (mod.UseTimeModifier / 100f));

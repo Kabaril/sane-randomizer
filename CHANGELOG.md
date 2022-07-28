@@ -15,6 +15,10 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [1.8] - 2022-07-02
+### Fixed
+- Fixed certain items not working with low use time
+
 ## [1.7] - 2022-06-07
 
 ## [1.6] - 2022-05-18
