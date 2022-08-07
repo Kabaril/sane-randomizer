@@ -12,6 +12,12 @@ namespace SaneRandomizer
 
         [Header("General")]
 
+        [Label("Long Term Randomization 2022")]
+        [Tooltip("Randomize Item Values to not change across versions\nNote: Values can still change with Seed and external Mod/tModLoader updates")]
+        [ReloadRequired]
+        [DefaultValue(false)]
+        public bool LTS22;
+
         [Label("Randomizer Seed")]
         [Tooltip("Seed used for randomizing everything")]
         [ReloadRequired]
@@ -21,8 +27,8 @@ namespace SaneRandomizer
 
         [Header("Randomizer Settings")]
 
-        [Label("Trade")]
-        [Tooltip("Randomize Items Sold by Vanilla Merchants with a few Exceptions")]
+        [Label("Trade [Deprecated]")]
+        [Tooltip("Randomize Items Sold by Vanilla Merchants with a few Exceptions\nWill be removed or overhauled in future version")]
         [DefaultValue(false)]
         public bool Trade;
 

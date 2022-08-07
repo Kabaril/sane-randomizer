@@ -33,7 +33,6 @@ namespace SaneRandomizer
             }
             SaneRandomizerConfig config = SaneRandomizer.Instance.Config;
             ItemBaseModifier mod = SaneRandomizer.Instance.ItemModifierTable[item.type];
-            //set everything from 50% base to 200% randomly
             if (item.damage != -1) {
                 if (config.Damage)
                 {

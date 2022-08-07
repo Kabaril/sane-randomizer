@@ -15,6 +15,12 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [2.0] - 2022-08-06
+### Added
+- Long Term Randomization 2022
+- Non-LTS Randomizer using multiple Random Instances to reduce unexpected value changes
+- Non-LTS Randomizer changes for Deterministic Modded Randomization
+
 ## [1.8] - 2022-07-02
 ### Fixed
 - Fixed certain items not working with low use time

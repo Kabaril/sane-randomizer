@@ -37,6 +37,10 @@ namespace SaneRandomizer
 
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
+            if (SaneRandomizer.Instance is null)
+            {
+                return;
+            }
             if (!SaneRandomizer.Instance.Config.Drops)
             {
                 base.ModifyNPCLoot(npc, npcLoot);

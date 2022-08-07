@@ -146,6 +146,7 @@ namespace SaneRandomizer
             NPCID.ChatteringTeethBomb,
             NPCID.BloodSquid,
             NPCID.BloodNautilus,
+            NPCID.Everscream,
         };
 
         public static int[] OverrideEnemyPreHardmode =
