@@ -15,6 +15,8 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [2.1] - 2022-09-03
+
 ## [2.0] - 2022-08-06
 ### Added
 - Long Term Randomization 2022
