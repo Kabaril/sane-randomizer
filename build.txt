@@ -1,5 +1,5 @@
 displayName = Sane Randomizer
 author = Kabaril
-version = 2.1
+version = 2.2
 homepage = https://github.com/Kabaril/sane-randomizer
 buildIgnore = .vs\*, Properties\*, *.csproj, *.sln, obj\*, bin\*, .git\*
