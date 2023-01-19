@@ -15,6 +15,13 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [2.3] - 2023-01-19
+### Added
+- Added option to favor centric values by percantage
+
+### Fixed
+- Vodoo Demons drops are no longer randomized
+
 ## [2.2] - 2022-10-01
 
 ## [2.1] - 2022-09-03

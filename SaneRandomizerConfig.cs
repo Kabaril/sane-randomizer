@@ -25,6 +25,13 @@ namespace SaneRandomizer
         [DefaultValue(0)]
         public int Seed;
 
+        [Label("Favor Center Random Values")]
+        [Tooltip("Percentage by which default values are favored.\n-100 -> values are likely far from normal\n100 -> values are likely close to normal\nDoes nothing in LTS22")]
+        [ReloadRequired]
+        [Range(-100, 100)]
+        [DefaultValue(0)]
+        public int FavorCentricPercentage;
+
         [Header("Randomizer Settings")]
 
         [Label("Trade [Deprecated]")]

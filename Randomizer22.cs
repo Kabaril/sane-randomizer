@@ -61,6 +61,10 @@ namespace SaneRandomizer
                     continue;
                 }
                 NPCBaseModifier mod = new NPCBaseModifier(Random, minMaxTable);
+                if(i == NPCID.VoodooDemon)
+                {
+                    continue;
+                }
                 NPCModifierTable.Add(i, mod);
             }
 

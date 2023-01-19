@@ -12,9 +12,16 @@ namespace SaneRandomizer
 
         public NPCBaseModifier(Random random, MinMaxTable table)
         {
-            DamageModifier = random.Next(table.NPCDamageMinimum, table.NPCDamageMaximum);
-            MaxLifeModifier = random.Next(table.NPCLifeMinimum, table.NPCLifeMaximum);
-            DefenseModifier = random.Next(table.NPCArmorMinimum, table.NPCArmorMaximum);
+            DamageModifier = GetRandomWithVariance(random, table.NPCDamageMinimum, table.NPCDamageMaximum, table.Variance);
+            MaxLifeModifier = GetRandomWithVariance(random, table.NPCLifeMinimum, table.NPCLifeMaximum, table.Variance);
+            DefenseModifier = GetRandomWithVariance(random, table.NPCArmorMinimum, table.NPCArmorMaximum, table.Variance);
+        }
+
+        private static int GetRandomWithVariance(Random random, int min, int max, float variance)
+        {
+            float max_shift = (max - min) * (variance + 1f);
+            float value_shifted = ((float)random.NextDouble()) * max_shift;
+            return (int)(value_shifted / (variance + 1f)) + min;
         }
     }
 }

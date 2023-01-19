@@ -34,20 +34,27 @@ namespace SaneRandomizer
 
         public ItemBaseModifier(Random random, MinMaxTable table)
         {
-            DamageModifier = random.Next(table.DamageMinimum, table.DamageMaximum);
-            ShootSpeedModifier = random.Next(table.ShootSpeedMinimum, table.ShootSpeedMaximum);
-            CritModifier = random.Next(table.CritChanceMinimum, table.CritChanceMaximum);
-            DefenseModifier = random.Next(table.ArmorValuesMinimum, table.ArmorValuesMaximum);
-            KnockBackModifier = random.Next(table.KnockbackMinimum, table.KnockbackMaximum);
-            BuffTimeModifier = random.Next(table.PotionBuffDurationMinimum, table.PotionBuffDurationMaximum);
-            HealValueModifier = random.Next(table.PotionHealValuesMinimum, table.PotionHealValuesMaximum);
-            ManaValueModifier = random.Next(table.PotionManaValuesMinimum, table.PotionManaValuesMaximum);
-            ManaCostModifier = random.Next(table.ManaCostMinimum, table.ManaCostMaximum);
-            ScaleModifier = random.Next(table.ScaleMinimum, table.ScaleMaximum);
-            UseTimeModifier = random.Next(table.UseTimeMinimum, table.UseTimeMaximum);
-            ValueModifier = random.Next(table.ItemValueMinimum, table.ItemValueMaximum);
-            BaitPowerModifier = random.Next(table.BaitPowerMinimum, table.BaitPowerMaximum);
-            FishingRodPowerModifier = random.Next(table.FishingRodPowerMinimum, table.FishingRodPowerMaximum);
+            DamageModifier = GetRandomWithVariance(random, table.DamageMinimum, table.DamageMaximum, table.Variance);
+            ShootSpeedModifier = GetRandomWithVariance(random, table.ShootSpeedMinimum, table.ShootSpeedMaximum, table.Variance);
+            CritModifier = GetRandomWithVariance(random, table.CritChanceMinimum, table.CritChanceMaximum, table.Variance);
+            DefenseModifier = GetRandomWithVariance(random, table.ArmorValuesMinimum, table.ArmorValuesMaximum, table.Variance);
+            KnockBackModifier = GetRandomWithVariance(random, table.KnockbackMinimum, table.KnockbackMaximum, table.Variance);
+            BuffTimeModifier = GetRandomWithVariance(random, table.PotionBuffDurationMinimum, table.PotionBuffDurationMaximum, table.Variance);
+            HealValueModifier = GetRandomWithVariance(random, table.PotionHealValuesMinimum, table.PotionHealValuesMaximum, table.Variance);
+            ManaValueModifier = GetRandomWithVariance(random, table.PotionManaValuesMinimum, table.PotionManaValuesMaximum, table.Variance);
+            ManaCostModifier = GetRandomWithVariance(random, table.ManaCostMinimum, table.ManaCostMaximum, table.Variance);
+            ScaleModifier = GetRandomWithVariance(random, table.ScaleMinimum, table.ScaleMaximum, table.Variance);
+            UseTimeModifier = GetRandomWithVariance(random, table.UseTimeMinimum, table.UseTimeMaximum, table.Variance);
+            ValueModifier = GetRandomWithVariance(random, table.ItemValueMinimum, table.ItemValueMaximum, table.Variance);
+            BaitPowerModifier = GetRandomWithVariance(random, table.BaitPowerMinimum, table.BaitPowerMaximum, table.Variance);
+            FishingRodPowerModifier = GetRandomWithVariance(random, table.FishingRodPowerMinimum, table.FishingRodPowerMaximum, table.Variance);
+        }
+
+        private static int GetRandomWithVariance(Random random, int min, int max, float variance)
+        {
+            float max_shift = (max - min) * (variance + 1f);
+            float value_shifted = ((float)random.NextDouble()) * max_shift;
+            return (int)(value_shifted / (variance + 1f)) + min;
         }
     }
 }

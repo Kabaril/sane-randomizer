@@ -38,9 +38,17 @@ namespace SaneRandomizer
         public int NPCDamageMaximum;
         public int NPCArmorMinimum;
         public int NPCArmorMaximum;
+        public float Variance;
 
         public MinMaxTable(SaneRandomizerConfig config)
         {
+            if(config.LTS22)
+            {
+                Variance = 1f;
+            } else
+            {
+                Variance = config.FavorCentricPercentage / 200f;
+            }
             DamageMinimum = Math.Min(config.DamageMinimum, config.DamageMaximum);
             DamageMaximum = Math.Max(config.DamageMaximum, config.DamageMinimum);
             ShootSpeedMaximum = Math.Max(config.ShootSpeedMaximum, config.ShootSpeedMinimum);

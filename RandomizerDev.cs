@@ -71,6 +71,10 @@ namespace SaneRandomizer
                 int npc_specific_seed = unchecked(Seed + npc.FullName.GetHashCode());
                 Random random = new Random(npc_specific_seed);
                 NPCBaseModifier mod = new NPCBaseModifier(random, minMaxTable);
+                if (i == NPCID.VoodooDemon)
+                {
+                    continue;
+                }
                 NPCModifierTable.Add(i, mod);
             }
 
