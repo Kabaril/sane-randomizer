@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent.ItemDropRules;
+using System.Reflection;
 
 namespace SaneRandomizer
 {
@@ -60,60 +61,44 @@ namespace SaneRandomizer
             }
         }
 
-        public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        public override void ModifyShop(NPCShop shop)
         {
             if (!SaneRandomizer.Instance.Config.Trade)
             {
-                base.SetupShop(type, shop, ref nextSlot);
-                return;
+                base.ModifyShop(shop);
             }
-            if (SaneRandomizer.Instance.TradeTable.ContainsKey(type))
+            if (SaneRandomizer.Instance.TradeTable.ContainsKey(shop.NpcType))
             {
-                for(int i = 0; i < shop.item.Length; i++)
+                List<NPCShop.Entry> entries = new List<NPCShop.Entry>();
+                foreach (int item in SaneRandomizer.Instance.TradeTable[shop.NpcType])
                 {
-                    shop.item[i] = new Item();
+                    entries.Add(new NPCShop.Entry(item));
                 }
-                int index = 0;
-                foreach (int item in SaneRandomizer.Instance.TradeTable[type])
-                {
-                    Item shopitem = new Item();
-                    shopitem.SetDefaults(item);
-                    shop.item[index] = shopitem;
-                    index++;
-                }
-                if(type == NPCID.Steampunker)
+                if(shop.NpcType == NPCID.Steampunker)
                 {
                     if(WorldGen.crimson)
                     {
-                        Item shopitem = new Item();
-                        shopitem.SetDefaults(ItemID.RedSolution);
-                        shop.item[index] = shopitem;
-                        index++;
+                        entries.Add(new NPCShop.Entry(ItemID.RedSolution));
                     } else {
-                        Item shopitem = new Item();
-                        shopitem.SetDefaults(ItemID.PurpleSolution);
-                        shop.item[index] = shopitem;
-                        index++;
+                        entries.Add(new NPCShop.Entry(ItemID.PurpleSolution));
                     }
                 }
                 if (NPC.downedPlantBoss) {
-                    if (type == NPCID.WitchDoctor)
+                    if (shop.NpcType == NPCID.WitchDoctor)
                     {
-                        Item shopitem1 = new Item();
-                        shopitem1.SetDefaults(ItemID.PygmyNecklace);
-                        shop.item[index] = shopitem1;
-                        index++;
-                        Item shopitem2 = new Item();
-                        shopitem2.SetDefaults(ItemID.HerculesBeetle);
-                        shop.item[index] = shopitem2;
-                        index++;
+                        entries.Add(new NPCShop.Entry(ItemID.PygmyNecklace));
+                        entries.Add(new NPCShop.Entry(ItemID.HerculesBeetle));
                     }
                 }
-                nextSlot = index;
-            }
-            else
+                FieldInfo info = shop.GetType().GetField("_entries", BindingFlags.NonPublic | BindingFlags.Instance);
+                if(info is not null) {
+                    info.SetValue(shop , entries);
+                } else {
+                    SaneRandomizer.Instance.Logger.Error("Could not use reflection to modify shops, skipping");
+                }
+            } else
             {
-                base.SetupShop(type, shop, ref nextSlot);
+                base.ModifyShop(shop);
             }
         }
 

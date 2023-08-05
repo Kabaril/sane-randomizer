@@ -1,0 +1,309 @@
+Mods: {
+	SaneRandomizer: {
+		Configs: {
+			SaneRandomizerConfig: {
+				DisplayName: Sane Randomizer Config
+
+				Headers: {
+					General: General
+					RandomizerSettings: Randomizer Settings
+					Limits: Limits
+				}
+
+				LTS22: {
+					Label: Long Term Randomization 2022
+					Tooltip:
+						'''
+						Randomize Item Values to not change across versions
+						Note: Values can still change with Seed and external Mod/tModLoader updates
+						'''
+				}
+
+				Seed: {
+					Label: Randomizer Seed
+					Tooltip: Seed used for randomizing everything
+				}
+
+				FavorCentricPercentage: {
+					Label: Favor Center Random Values
+					Tooltip:
+						'''
+						Percentage by which default values are favored.
+						-100 -> values are likely far from normal
+						100 -> values are likely close to normal
+						Does nothing in LTS22
+						'''
+				}
+
+				Trade: {
+					Label: Trade [Deprecated]
+					Tooltip:
+						'''
+						Randomize Items Sold by Vanilla Merchants with a few Exceptions
+						Will be overhauled in a future version
+						'''
+				}
+
+				Drops: {
+					Label: Drops
+					Tooltip: Randomize Dropped Loot from enemies, except Bosses
+				}
+
+				Damage: {
+					Label: Damage
+					Tooltip: Randomize Damage of all Items
+				}
+
+				ShootSpeed: {
+					Label: Shoot Speed
+					Tooltip: Randomize Shoot Speed of all Items
+				}
+
+				Knockback: {
+					Label: Knockback
+					Tooltip: Randomize Knockback of all Items
+				}
+
+				CritChance: {
+					Label: Crit Chance
+					Tooltip: Randomize Crit Chance of all Items
+				}
+
+				Scale: {
+					Label: Scale
+					Tooltip: Randomize Scale of all Items
+				}
+
+				ManaCost: {
+					Label: Mana Cost
+					Tooltip: Randomize Mana Cost of all Items
+				}
+
+				UseTime: {
+					Label: Use Time
+					Tooltip: Randomize Use Time of all Items
+				}
+
+				BaitPower: {
+					Label: Bait Power
+					Tooltip: Randomize Bait Power of all Items
+				}
+
+				FishingRodPower: {
+					Label: Fishing Rod Power
+					Tooltip: Randomize Fishing Rod Power of all Items
+				}
+
+				ItemValue: {
+					Label: Item Value
+					Tooltip: Randomize Item Value (coin cost and reforge cost) of all Items
+				}
+
+				PotionBuffDuration: {
+					Label: Potion Buff Duration
+					Tooltip: Randomize Potion Buff Duration
+				}
+
+				PotionHealValues: {
+					Label: Potion Heal Values
+					Tooltip: Randomize Potion Heal Values
+				}
+
+				PotionManaValues: {
+					Label: Potion Mana Values
+					Tooltip: Randomize Potion Mana Values
+				}
+
+				ArmorValues: {
+					Label: Armor Values
+					Tooltip: Randomize Armor Values of all Items
+				}
+
+				NPCLife: {
+					Label: NPC Life
+					Tooltip: Randomize Maximum Life of NPCs (excluding Bosses)
+				}
+
+				NPCDamage: {
+					Label: NPC Damage
+					Tooltip: Randomize Damage of NPCs (excluding Bosses)
+				}
+
+				NPCArmor: {
+					Label: NPC Armor
+					Tooltip: Randomize Armor of NPCs (excluding Bosses)
+				}
+
+				DamageMinimum: {
+					Label: Damage Minimum Percentage
+					Tooltip: Minimum Percentage for Damage of all Items
+				}
+
+				DamageMaximum: {
+					Label: Damage Maximum Percentage
+					Tooltip: Maximum Percentage for Damage of all Items
+				}
+
+				ShootSpeedMinimum: {
+					Label: Shoot Speed Minimum Percentage
+					Tooltip: Minimum Percentage for Shoot Speed of all Items
+				}
+
+				ShootSpeedMaximum: {
+					Label: Shoot Speed Maximum Percentage
+					Tooltip: Maximum Percentage for Shoot Speed of all Items
+				}
+
+				KnockbackMinimum: {
+					Label: Knockback Minimum Percentage
+					Tooltip: Minimum Percentage for Knockback of all Items
+				}
+
+				KnockbackMaximum: {
+					Label: Knockback Maximum Percentage
+					Tooltip: Maximum Percentage for Knockback of all Items
+				}
+
+				CritChanceMinimum: {
+					Label: Crit Chance Minimum Percentage
+					Tooltip: Minimum Percentage for Crit Chance of all Items
+				}
+
+				CritChanceMaximum: {
+					Label: Crit Chance Maximum Percentage
+					Tooltip: Maximum Percentage for Crit Chance of all Items
+				}
+
+				ScaleMinimum: {
+					Label: Scale Minimum Percentage
+					Tooltip: Minimum Percentage for Scale of all Items
+				}
+
+				ScaleMaximum: {
+					Label: Scale Maximum Percentage
+					Tooltip: Maximum Percentage for Scale of all Items
+				}
+
+				ManaCostMinimum: {
+					Label: Mana Cost Minimum Percentage
+					Tooltip: Minimum Percentage for Mana Cost of all Items
+				}
+
+				ManaCostMaximum: {
+					Label: Mana Cost Maximum Percentage
+					Tooltip: Maximum Percentage for Mana Cost of all Items
+				}
+
+				UseTimeMinimum: {
+					Label: Use Time Minimum Percentage
+					Tooltip: Minimum Percentage for Use Time of all Items
+				}
+
+				UseTimeMaximum: {
+					Label: Use Time Maximum Percentage
+					Tooltip: Maximum Percentage for Use Time of all Items
+				}
+
+				BaitPowerMinimum: {
+					Label: Bait Power Minimum Percentage
+					Tooltip: Minimum Percentage for Bait Power of all Items
+				}
+
+				BaitPowerMaximum: {
+					Label: Bait Power Maximum Percentage
+					Tooltip: Maximum Percentage for Bait Power of all Items
+				}
+
+				FishingRodPowerMinimum: {
+					Label: Fishing Rod Power Minimum Percentage
+					Tooltip: Minimum Percentage for Fishing Rod Power of all Items
+				}
+
+				FishingRodPowerMaximum: {
+					Label: Fishing Rod Power Maximum Percentage
+					Tooltip: Maximum Percentage for Fishing Rod Power of all Items
+				}
+
+				ItemValueMinimum: {
+					Label: Item Value Minimum Percentage
+					Tooltip: Minimum Percentage for Item Value of all Items
+				}
+
+				ItemValueMaximum: {
+					Label: Item Value Maximum Percentage
+					Tooltip: Maximum Percentage for Item Value of all Items
+				}
+
+				PotionBuffDurationMinimum: {
+					Label: Potion Buff Duration Minimum Percentage
+					Tooltip: Minimum Percentage for Potion Buff Duration of all Items
+				}
+
+				PotionBuffDurationMaximum: {
+					Label: Potion Buff Duration Maximum Percentage
+					Tooltip: Maximum Percentage for Potion Buff Duration of all Items
+				}
+
+				PotionHealValuesMinimum: {
+					Label: Potion Heal Values Minimum Percentage
+					Tooltip: Minimum Percentage for Potion Heal Values of all Items
+				}
+
+				PotionHealValuesMaximum: {
+					Label: Potion Heal Values Maximum Percentage
+					Tooltip: Maximum Percentage for Potion Heal Values of all Items
+				}
+
+				PotionManaValuesMinimum: {
+					Label: Potion Mana Values Minimum Percentage
+					Tooltip: Minimum Percentage for Potion Mana Values of all Items
+				}
+
+				PotionManaValuesMaximum: {
+					Label: Potion Mana Values Maximum Percentage
+					Tooltip: Maximum Percentage for Potion Mana Values of all Items
+				}
+
+				ArmorValuesMinimum: {
+					Label: Armor Values Minimum Percentage
+					Tooltip: Minimum Percentage for Armor Values of all Items
+				}
+
+				ArmorValuesMaximum: {
+					Label: Armor Values Maximum Percentage
+					Tooltip: Maximum Percentage for Armor Values of all Items
+				}
+
+				NPCLifeMinimum: {
+					Label: NPC Life Minimum Percentage
+					Tooltip: Minimum Percentage for NPC Life
+				}
+
+				NPCLifeMaximum: {
+					Label: NPC Life Maximum Percentage
+					Tooltip: Maximum Percentage for NPC Life
+				}
+
+				NPCDamageMinimum: {
+					Label: NPC Damage Minimum Percentage
+					Tooltip: Minimum Percentage for NPC Damage
+				}
+
+				NPCDamageMaximum: {
+					Label: NPC Damage Maximum Percentage
+					Tooltip: Maximum Percentage for NPC Damage
+				}
+
+				NPCArmorMinimum: {
+					Label: NPC Armor Minimum Percentage
+					Tooltip: Minimum Percentage for NPC Armor
+				}
+
+				NPCArmorMaximum: {
+					Label: NPC Armor Maximum Percentage
+					Tooltip: Maximum Percentage for NPC Armor
+				}
+			}
+		}
+	}
+}

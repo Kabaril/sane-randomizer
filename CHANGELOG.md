@@ -15,6 +15,10 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [2.4] - 2023-08-05
+### Changed
+- Shop randomization is less reliable because of changes in tModLoader API
+
 ## [2.3] - 2023-01-19
 ### Added
 - Added option to favor centric values by percantage
