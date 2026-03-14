@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -66,6 +66,7 @@ namespace SaneRandomizer
             if (!SaneRandomizer.Instance.Config.Trade)
             {
                 base.ModifyShop(shop);
+                return;
             }
             if (SaneRandomizer.Instance.TradeTable.ContainsKey(shop.NpcType))
             {
