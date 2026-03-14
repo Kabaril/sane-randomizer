@@ -15,6 +15,10 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [2.6] - 2026-03-14
+### Fixed
+- Seed is correctly applied in RandomizerDev
+
 ## [2.5] - 2026-03-14
 ### Changed
 - Updated to tModLoader API v2026.1.3.2

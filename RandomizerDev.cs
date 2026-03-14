@@ -21,9 +21,9 @@ public class RandomizerDev : IRandomizer
     public RandomizerDev(ILog logger, int seed)
     {
         _logger = logger;
-        _itemRandom = new Random(_seed);
-        _dropRandom = new Random(_seed);
-        _tradeRandom = new Random(_seed);
+        _itemRandom = new Random(seed);
+        _dropRandom = new Random(seed);
+        _tradeRandom = new Random(seed);
         _seed = seed;
     }
 
