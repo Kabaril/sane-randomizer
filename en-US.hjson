@@ -36,7 +36,7 @@ Mods: {
 				}
 
 				Trade: {
-					Label: Trade [Deprecated]
+					Label: Trade
 					Tooltip:
 						'''
 						Randomize Items Sold by Vanilla Merchants with a few Exceptions

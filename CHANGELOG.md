@@ -15,6 +15,15 @@ and this project partially adheres to [Semantic Versioning](https://semver.org/s
 
 ### Deprecated
 
+## [2.5] - 2026-03-14
+### Changed
+- Updated to tModLoader API v2026.1.3.2
+- Code Cleanup
+- Enabled Trade Randomization by default
+
+### Fixed
+- Trade Randomization (except Traveling Merchant)
+
 ## [2.4] - 2023-08-05
 ### Changed
 - Shop randomization is less reliable because of changes in tModLoader API

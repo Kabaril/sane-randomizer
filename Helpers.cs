@@ -7,7 +7,8 @@ namespace SaneRandomizer
 {
     public static class Helpers
     {
-        public static int[] ExcludedEnemies = {
+        public static int[] ExcludedEnemies =
+        [
             NPCID.EaterofWorldsBody,
             NPCID.EaterofWorldsHead,
             NPCID.EaterofWorldsTail,
@@ -146,18 +147,18 @@ namespace SaneRandomizer
             NPCID.ChatteringTeethBomb,
             NPCID.BloodSquid,
             NPCID.BloodNautilus,
-            NPCID.Everscream,
-        };
+            NPCID.Everscream
+        ];
 
         public static int[] OverrideEnemyPreHardmode =
-        {
+        [
             NPCID.Wolf,
             NPCID.AnomuraFungus,
-            NPCID.MushiLadybug,
-        };
+            NPCID.MushiLadybug
+        ];
 
         public static int[] OverrideEnemyPostHardmode =
-        {
+        [
             NPCID.PirateDeckhand,
             NPCID.PirateDeadeye,
             NPCID.WyvernHead,
@@ -169,11 +170,11 @@ namespace SaneRandomizer
             NPCID.SandElemental,
             NPCID.Mothron,
             NPCID.Medusa,
-            NPCID.IceGolem,
-        };
+            NPCID.IceGolem
+        ];
 
         public static int[] OverrideEnemyPostPlantera =
-        {
+        [
             NPCID.Lihzahrd,
             NPCID.LihzahrdCrawler,
             NPCID.FlyingSnake,
@@ -221,11 +222,11 @@ namespace SaneRandomizer
             NPCID.DeadlySphere,
             NPCID.DrManFly,
             NPCID.MartianWalker,
-            NPCID.Nailhead,
-        };
+            NPCID.Nailhead
+        ];
 
         public static int[] PreHardmodeNPCs =
-        {
+        [
             NPCID.AngryBones,
             NPCID.ShortBones,
             NPCID.BigBoned,
@@ -375,11 +376,11 @@ namespace SaneRandomizer
             NPCID.PirateCorsair,
             NPCID.PirateCrossbower,
             NPCID.PirateDeadeye,
-            NPCID.PirateDeckhand,
-        };
+            NPCID.PirateDeckhand
+        ];
 
         public static int[] PrePlanteraNPCs =
-        {
+        [
             NPCID.AnglerFish,
             NPCID.AngryTrapper,
             NPCID.Arapaima,
@@ -459,11 +460,11 @@ namespace SaneRandomizer
             NPCID.Reaper,
             NPCID.SwampThing,
             NPCID.ThePossessed,
-            NPCID.Vampire,
-        };
+            NPCID.Vampire
+        ];
 
         public static int[] PostPlanteraNPCs =
-        {
+        [
             NPCID.BlueArmoredBones,
             NPCID.BlueArmoredBonesMace,
             NPCID.BlueArmoredBonesNoPants,
@@ -510,10 +511,10 @@ namespace SaneRandomizer
             NPCID.PresentMimic,
             NPCID.Yeti,
             NPCID.ZombieElf
-        };
+        ];
 
         public static int[] PreHardmodeItems =
-        {
+        [
             ItemID.Aglet,
             ItemID.BalloonPufferfish,
             ItemID.AnkletoftheWind,
@@ -683,10 +684,10 @@ namespace SaneRandomizer
             ItemID.Vertebrae,
             ItemID.VioletHusk,
             ItemID.WormTooth
-        };
+        ];
 
         public static int[] PrePlanteraItems =
-        {
+        [
             ItemID.NeptunesShell,
             ItemID.LeafWings,
             ItemID.Jetpack,
@@ -843,11 +844,11 @@ namespace SaneRandomizer
             ItemID.SpiderFang,
             ItemID.TatteredBeeWing,
             ItemID.TurtleShell,
-            ItemID.UnicornHorn,
-        };
+            ItemID.UnicornHorn
+        ];
 
         public static int[] PostPlanteraItems =
-        {
+        [
             ItemID.Tabi,
             ItemID.SteampunkWings,
             ItemID.BetsyWings,
@@ -871,11 +872,11 @@ namespace SaneRandomizer
             ItemID.BoneFeather,
             ItemID.Ectoplasm,
             ItemID.SpookyTwig,
-            ItemID.VialofVenom,
-        };
+            ItemID.VialofVenom
+        ];
 
         public static int[] PreHardmodeMerchants =
-        {
+        [
             NPCID.Merchant,
             NPCID.Demolitionist,
             NPCID.DyeTrader,
@@ -888,30 +889,30 @@ namespace SaneRandomizer
             NPCID.Mechanic,
             NPCID.PartyGirl,
             NPCID.SkeletonMerchant,
-            NPCID.Painter,
-        };
+            NPCID.Painter
+        ];
 
         public static int[] PrePlanteraMerchants =
-        {
+        [
             NPCID.Wizard,
             NPCID.Truffle,
             NPCID.Pirate,
             NPCID.Steampunker,
             NPCID.SantaClaus
-        };
+        ];
 
         public static int[] PostPlanteraMerchants =
-        {
-            NPCID.Cyborg,
-        };
+        [
+            NPCID.Cyborg
+        ];
 
         //should do the same save that the configmanager does
         public static void Save(ModConfig config)
         {
             Directory.CreateDirectory(ConfigManager.ModConfigPath);
-            string filename = config.Mod.Name + "_" + config.Name + ".json";
-            string path = Path.Combine(ConfigManager.ModConfigPath, filename);
-            string json = JsonConvert.SerializeObject(config, ConfigManager.serializerSettings);
+            var filename = config.Mod.Name + "_" + config.Name + ".json";
+            var path = Path.Combine(ConfigManager.ModConfigPath, filename);
+            var json = JsonConvert.SerializeObject(config, ConfigManager.serializerSettings);
             File.WriteAllText(path, json);
         }
     }

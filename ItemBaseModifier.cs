@@ -52,9 +52,9 @@ namespace SaneRandomizer
 
         private static int GetRandomWithVariance(Random random, int min, int max, float variance)
         {
-            float max_shift = (max - min) * (variance + 1f);
-            float value_shifted = ((float)random.NextDouble()) * max_shift;
-            return (int)(value_shifted / (variance + 1f)) + min;
+            var maxShift = (max - min) * (variance + 1f);
+            var valueShifted = ((float)random.NextDouble()) * maxShift;
+            return (int)(valueShifted / (variance + 1f)) + min;
         }
     }
 }

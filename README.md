@@ -24,7 +24,10 @@ Sane Randomizer randomizes the following things:
 - Maximum Life of NPCs (excluding Bosses)
 
 Item drops now support modded items and enemies, thanks 1.4!
-Trade items do not currently support modded items, disabled by default
+
+Known Issues:
+- Trade items do not currently support modded items
+- Traveling Merchant doesn't get randomized for some reason
 
 All Randomizations are Seeded and only change when the Seed (in Mod Options) changes.
 

@@ -7,349 +7,348 @@ using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using log4net;
 
-namespace SaneRandomizer
+namespace SaneRandomizer;
+
+public class Randomizer22 : IRandomizer
 {
-    public class Randomizer22 : IRandomizer
+    private ILog _logger;
+    private Random _random;
+
+    public Randomizer22(ILog logger, int seed)
     {
-        private ILog Logger;
-        private Random Random;
+        _logger = logger;
+        _random = new Random(seed);
+    }
 
-        public Randomizer22(ILog logger, int Seed)
+    public Dictionary<int, NPCBaseModifier> RandomizeNPCValues(MinMaxTable minMaxTable)
+    {
+        var npcModifierTable = new Dictionary<int, NPCBaseModifier>();
+        var npcCount = NPCLoader.NPCCount;
+        for (var i = 0; i < npcCount; i++)
         {
-            Logger = logger;
-            Random = new Random(Seed);
+            if (Helpers.ExcludedEnemies.Contains(i))
+            {
+                continue;
+            }
+            var npc = new NPC();
+            try
+            {
+                npc.SetDefaults(i);
+            }
+            catch (Exception e)
+            {
+                if (npc.FullName is null)
+                {
+                    //something went horribly wrong, skip this npc
+                    _logger.Warn("Sane Randomizer: Skipped NPC " + i + " could not set Defaults");
+                    continue;
+                }
+            }
+            if (npc.boss)
+            {
+                continue;
+            }
+            if (npc.lifeMax < 10)
+            {
+                continue;
+            }
+            if (npc.lifeMax > (int.MaxValue / 2))
+            {
+                continue;
+            }
+            if (npc.immortal)
+            {
+                continue;
+            }
+            var mod = new NPCBaseModifier(_random, minMaxTable);
+            if(i == NPCID.VoodooDemon)
+            {
+                continue;
+            }
+            npcModifierTable.Add(i, mod);
         }
 
-        public Dictionary<int, NPCBaseModifier> RandomizeNPCValues(MinMaxTable minMaxTable)
-        {
-            Dictionary<int, NPCBaseModifier> NPCModifierTable = new Dictionary<int, NPCBaseModifier>();
-            int npc_count = NPCLoader.NPCCount;
-            for (int i = 0; i < npc_count; i++)
-            {
-                if (Helpers.ExcludedEnemies.Contains(i))
-                {
-                    continue;
-                }
-                NPC npc = new NPC();
-                try
-                {
-                    npc.SetDefaults(i);
-                }
-                catch (Exception e)
-                {
-                    if (npc.FullName is null)
-                    {
-                        //something went horribly wrong, skip this npc
-                        Logger.Warn("Sane Randomizer: Skipped NPC " + i + " could not set Defaults");
-                        continue;
-                    }
-                }
-                if (npc.boss)
-                {
-                    continue;
-                }
-                if (npc.lifeMax < 10)
-                {
-                    continue;
-                }
-                if (npc.lifeMax > (int.MaxValue / 2))
-                {
-                    continue;
-                }
-                if (npc.immortal)
-                {
-                    continue;
-                }
-                NPCBaseModifier mod = new NPCBaseModifier(Random, minMaxTable);
-                if(i == NPCID.VoodooDemon)
-                {
-                    continue;
-                }
-                NPCModifierTable.Add(i, mod);
-            }
+        return npcModifierTable;
+    }
 
-            return NPCModifierTable;
+    private void AddToDropTable(int npc, IItemDropRule item, ref Dictionary<int, IItemDropRule[]> dropTable)
+    {
+        if (dropTable.ContainsKey(npc))
+        {
+            var values = new List<IItemDropRule>(dropTable[npc]);
+            values.Add(item);
+            dropTable[npc] = values.ToArray();
+        }
+        else
+        {
+            dropTable.Add(npc, [item]);
+        }
+    }
+
+    public Dictionary<int, ItemBaseModifier> RandomizeItemValues(MinMaxTable minMaxTable)
+    {
+        var itemModifierTable = new Dictionary<int, ItemBaseModifier>();
+        var itemCount = ItemLoader.ItemCount;
+        for (var i = 1; i < itemCount; i++)
+        {
+            var mod = new ItemBaseModifier(_random, minMaxTable);
+            itemModifierTable.Add(i, mod);
         }
 
-        private void AddToDropTable(int npc, IItemDropRule item, ref Dictionary<int, IItemDropRule[]> DropTable)
+        return itemModifierTable;
+    }
+
+    public Dictionary<int, IItemDropRule[]> RandomizeDrops()
+    {
+        var dropTable = new Dictionary<int, IItemDropRule[]>();
+        var npcCount = NPCID.Search.Names.Count();
+        var names = new List<string>();
+        var preHardmodeNpcs = new List<int>();
+        //List<object> pre_hardmode_debug = new List<object>();
+        var preHardmodeDrops = new List<IItemDropRule>();
+        var postHardmodeNpcs = new List<int>();
+        //List<object> post_hardmode_debug = new List<object>();
+        var postHardmodeDrops = new List<IItemDropRule>();
+        var postPlanteraNpcs = new List<int>();
+        var postPlanteraDrops = new List<IItemDropRule>();
+        //List<object> post_plantera_debug = new List<object>();
+        for (var i = 0; i < npcCount; i++)
         {
-            if (DropTable.ContainsKey(npc))
+            if (Helpers.ExcludedEnemies.Contains(i))
             {
-                List<IItemDropRule> values = new List<IItemDropRule>(DropTable[npc]);
-                values.Add(item);
-                DropTable[npc] = values.ToArray();
+                continue;
             }
-            else
+            var npc = new NPC();
+            try
             {
-                DropTable.Add(npc, new IItemDropRule[] { item });
+                var param = new NPCSpawnParams();
+                param.strengthMultiplierOverride = 1f;
+                param.playerCountForMultiplayerDifficultyOverride = 1;
+                npc.SetDefaults(i, param);
             }
-        }
-
-        public Dictionary<int, ItemBaseModifier> RandomizeItemValues(MinMaxTable minMaxTable)
-        {
-            Dictionary<int, ItemBaseModifier>  ItemModifierTable = new Dictionary<int, ItemBaseModifier>();
-            int item_count = ItemLoader.ItemCount;
-            for (int i = 1; i < item_count; i++)
+            catch (Exception e)
             {
-                ItemBaseModifier mod = new ItemBaseModifier(Random, minMaxTable);
-                ItemModifierTable.Add(i, mod);
+                if (npc.FullName is null)
+                {
+                    //something went horribly wrong, skip this npc
+                    _logger.Warn("Sane Randomizer: Skipped NPC " + i + " could not set Defaults");
+                    continue;
+                }
+            }
+            if (npc.boss)
+            {
+                continue;
+            }
+            if (npc.friendly)
+            {
+                continue;
+            }
+            if (npc.immortal)
+            {
+                continue;
+            }
+            if (npc.aiStyle == NPCAIStyleID.Spell)
+            {
+                continue;
+            }
+            if (npc.aiStyle == NPCAIStyleID.Spore)
+            {
+                continue;
+            }
+            if (npc.aiStyle == NPCAIStyleID.Worm)
+            {
+                if (names.Contains(npc.FullName))
+                {
+                    continue;
+                }
             }
 
-            return ItemModifierTable;
-        }
-
-        public Dictionary<int, IItemDropRule[]> RandomizeDrops()
-        {
-            Dictionary<int, IItemDropRule[]> DropTable = new Dictionary<int, IItemDropRule[]>();
-            int npc_count = NPCID.Search.Names.Count();
-            List<string> names = new List<string>();
-            List<int> pre_hardmode_npcs = new List<int>();
-            //List<object> pre_hardmode_debug = new List<object>();
-            List<IItemDropRule> pre_hardmode_drops = new List<IItemDropRule>();
-            List<int> post_hardmode_npcs = new List<int>();
-            //List<object> post_hardmode_debug = new List<object>();
-            List<IItemDropRule> post_hardmode_drops = new List<IItemDropRule>();
-            List<int> post_plantera_npcs = new List<int>();
-            List<IItemDropRule> post_plantera_drops = new List<IItemDropRule>();
-            //List<object> post_plantera_debug = new List<object>();
-            for (int i = 0; i < npc_count; i++)
+            var damage = npc.damage;
+            if (damage == 0)
             {
-                if (Helpers.ExcludedEnemies.Contains(i))
-                {
-                    continue;
-                }
-                NPC npc = new NPC();
-                try
-                {
-                    NPCSpawnParams param = new NPCSpawnParams();
-                    param.strengthMultiplierOverride = 1f;
-                    param.playerCountForMultiplayerDifficultyOverride = 1;
-                    npc.SetDefaults(i, param);
-                }
-                catch (Exception e)
-                {
-                    if (npc.FullName is null)
-                    {
-                        //something went horribly wrong, skip this npc
-                        Logger.Warn("Sane Randomizer: Skipped NPC " + i + " could not set Defaults");
-                        continue;
-                    }
-                }
-                if (npc.boss)
-                {
-                    continue;
-                }
-                if (npc.friendly)
-                {
-                    continue;
-                }
-                if (npc.immortal)
-                {
-                    continue;
-                }
-                if (npc.aiStyle == NPCAIStyleID.Spell)
-                {
-                    continue;
-                }
-                if (npc.aiStyle == NPCAIStyleID.Spore)
-                {
-                    continue;
-                }
-                if (npc.aiStyle == NPCAIStyleID.Worm)
-                {
-                    if (names.Contains(npc.FullName))
-                    {
-                        continue;
-                    }
-                }
+                continue;
+            }
+            var maxLife = npc.lifeMax;
+            var defense = npc.defense;
+            var combatRating = damage * 5f + maxLife / 5f + defense * 3f;
 
-                int damage = npc.damage;
-                if (damage == 0)
-                {
-                    continue;
-                }
-                int max_life = npc.lifeMax;
-                int defense = npc.defense;
-                float combat_rating = (float)(damage * 5f) + (max_life / 5f) + (defense * 3f);
+            var drops = Main.ItemDropsDB.GetRulesForNPCID(i, false);
 
-                List<IItemDropRule> drops = Main.ItemDropsDB.GetRulesForNPCID(i, false);
+            names.Add(npc.FullName);
 
-                names.Add(npc.FullName);
+            if (Helpers.OverrideEnemyPreHardmode.Contains(i))
+            {
+                preHardmodeNpcs.Add(i);
+                preHardmodeDrops.AddRange(drops);
+                //pre_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                continue;
+            }
 
-                if (Helpers.OverrideEnemyPreHardmode.Contains(i))
-                {
-                    pre_hardmode_npcs.Add(i);
-                    pre_hardmode_drops.AddRange(drops);
-                    //pre_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
-                    continue;
-                }
+            if (Helpers.OverrideEnemyPostHardmode.Contains(i))
+            {
+                postHardmodeNpcs.Add(i);
+                postHardmodeDrops.AddRange(drops);
+                //post_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                continue;
+            }
 
-                if (Helpers.OverrideEnemyPostHardmode.Contains(i))
-                {
-                    post_hardmode_npcs.Add(i);
-                    post_hardmode_drops.AddRange(drops);
-                    //post_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
-                    continue;
-                }
-
-                if (Helpers.OverrideEnemyPostPlantera.Contains(i))
-                {
-                    post_plantera_npcs.Add(i);
-                    post_plantera_drops.AddRange(drops);
-                    //post_plantera_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
-                    continue;
-                }
-
-                if (combat_rating < 300f)
-                {
-                    pre_hardmode_npcs.Add(i);
-                    pre_hardmode_drops.AddRange(drops);
-                    //pre_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
-                    continue;
-                }
-                if (combat_rating < 900f)
-                {
-                    post_hardmode_npcs.Add(i);
-                    post_hardmode_drops.AddRange(drops);
-                    //post_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
-                    continue;
-                }
-                post_plantera_npcs.Add(i);
-                post_plantera_drops.AddRange(drops);
+            if (Helpers.OverrideEnemyPostPlantera.Contains(i))
+            {
+                postPlanteraNpcs.Add(i);
+                postPlanteraDrops.AddRange(drops);
                 //post_plantera_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
-                //npc basierend auf health, damage, etc in gamestage einordnen und drops aus db in gamestage schreiben
+                continue;
             }
 
-            RandomizeDropTables(pre_hardmode_npcs, pre_hardmode_drops, ref DropTable);
-            RandomizeDropTables(post_hardmode_npcs, post_hardmode_drops, ref DropTable);
-            RandomizeDropTables(post_plantera_npcs, post_plantera_drops, ref DropTable);
-
-            return DropTable;
+            if (combatRating < 300f)
+            {
+                preHardmodeNpcs.Add(i);
+                preHardmodeDrops.AddRange(drops);
+                //pre_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                continue;
+            }
+            if (combatRating < 900f)
+            {
+                postHardmodeNpcs.Add(i);
+                postHardmodeDrops.AddRange(drops);
+                //post_hardmode_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+                continue;
+            }
+            postPlanteraNpcs.Add(i);
+            postPlanteraDrops.AddRange(drops);
+            //post_plantera_debug.Add(new Tuple<float, string>(combat_rating, npc.FullName));
+            //npc basierend auf health, damage, etc in gamestage einordnen und drops aus db in gamestage schreiben
         }
 
-        private void RandomizeDropTables(List<int> npcs, List<IItemDropRule> drops, ref Dictionary<int, IItemDropRule[]> DropTable)
+        RandomizeDropTables(preHardmodeNpcs, preHardmodeDrops, ref dropTable);
+        RandomizeDropTables(postHardmodeNpcs, postHardmodeDrops, ref dropTable);
+        RandomizeDropTables(postPlanteraNpcs, postPlanteraDrops, ref dropTable);
+
+        return dropTable;
+    }
+
+    private void RandomizeDropTables(List<int> npcs, List<IItemDropRule> drops, ref Dictionary<int, IItemDropRule[]> dropTable)
+    {
+        var itemCount = drops.Count;
+        var npcCount = npcs.Count;
+
+        var selectedItems = new List<IItemDropRule>();
+
+        foreach (var npc in npcs)
         {
-            int item_count = drops.Count;
-            int npc_count = npcs.Count;
-
-            List<IItemDropRule> selected_items = new List<IItemDropRule>();
-
-            foreach (int npc in npcs)
-            {
-                int item_index = Random.Next(item_count);
-                IItemDropRule item = drops.ElementAt(item_index);
-                selected_items.Add(item);
-                AddToDropTable(npc, item, ref DropTable);
-            }
-
-            var unassigned = drops.Except(selected_items);
-
-            foreach (IItemDropRule item in unassigned)
-            {
-                int npc_index = Random.Next(npc_count);
-                int npc = npcs[npc_index];
-                AddToDropTable(npc, item, ref DropTable);
-            }
+            var itemIndex = _random.Next(itemCount);
+            var item = drops.ElementAt(itemIndex);
+            selectedItems.Add(item);
+            AddToDropTable(npc, item, ref dropTable);
         }
 
-        public Dictionary<int, int[]> RandomizeTrades()
-        {
-            Dictionary<int, int[]> TradeTable = new Dictionary<int, int[]>();
-            List<int> pre_hardmode_traders = new List<int>(Helpers.PreHardmodeMerchants);
-            List<int> pre_hardmode_items = new List<int>(Helpers.PreHardmodeItems);
-            RandomizeTradeTables(pre_hardmode_traders, pre_hardmode_items, ref TradeTable);
-            List<int> pre_plantera_traders = new List<int>(Helpers.PrePlanteraMerchants);
-            List<int> pre_plantera_items = new List<int>(Helpers.PrePlanteraItems);
-            RandomizeTradeTables(pre_plantera_traders, pre_plantera_items, ref TradeTable);
-            List<int> post_plantera_traders = new List<int>(Helpers.PostPlanteraMerchants);
-            List<int> post_plantera_items = new List<int>(Helpers.PostPlanteraItems);
-            RandomizeTradeTables(post_plantera_traders, post_plantera_items, ref TradeTable);
+        var unassigned = drops.Except(selectedItems);
 
-            return TradeTable;
+        foreach (var item in unassigned)
+        {
+            var npcIndex = _random.Next(npcCount);
+            var npc = npcs[npcIndex];
+            AddToDropTable(npc, item, ref dropTable);
         }
+    }
 
-        private void RandomizeTradeTables(List<int> npcs, List<int> items, ref Dictionary<int, int[]> TradeTable)
+    public Dictionary<int, int[]> RandomizeTrades()
+    {
+        var tradeTable = new Dictionary<int, int[]>();
+        var preHardmodeTraders = new List<int>(Helpers.PreHardmodeMerchants);
+        var preHardmodeItems = new List<int>(Helpers.PreHardmodeItems);
+        RandomizeTradeTables(preHardmodeTraders, preHardmodeItems, ref tradeTable);
+        var prePlanteraTraders = new List<int>(Helpers.PrePlanteraMerchants);
+        var prePlanteraItems = new List<int>(Helpers.PrePlanteraItems);
+        RandomizeTradeTables(prePlanteraTraders, prePlanteraItems, ref tradeTable);
+        var postPlanteraTraders = new List<int>(Helpers.PostPlanteraMerchants);
+        var postPlanteraItems = new List<int>(Helpers.PostPlanteraItems);
+        RandomizeTradeTables(postPlanteraTraders, postPlanteraItems, ref tradeTable);
+
+        return tradeTable;
+    }
+
+    private void RandomizeTradeTables(List<int> npcs, List<int> items, ref Dictionary<int, int[]> tradeTable)
+    {
+        var itemCount = items.Count;
+
+        foreach (var npc in npcs)
         {
-            int item_count = items.Count;
-
-            foreach (int npc in npcs)
+            if (npc == NPCID.Mechanic)
             {
-                if (npc == NPCID.Mechanic)
-                {
-                    continue;
-                }
-                List<int> store = new List<int>();
-                for (int i = 0; i < 8; i++)
-                {
-                    int item_index = Random.Next(item_count);
-                    int item = items[item_index];
-                    while (store.Contains(item))
-                    {
-                        item_index = Random.Next(item_count);
-                        item = items[item_index];
-                    }
-                    store.Add(item);
-                }
-                if (npc == NPCID.SkeletonMerchant)
-                {
-                    store.Add(ItemID.YoYoGlove);
-                }
-                if (npc == NPCID.ArmsDealer)
-                {
-                    store.Add(ItemID.MusketBall);
-                    store.Add(ItemID.Minishark);
-                    store.Add(ItemID.IllegalGunParts);
-                    store.Add(ItemID.StyngerBolt);
-                    store.Add(ItemID.CandyCorn);
-                    store.Add(ItemID.ExplosiveJackOLantern);
-                }
-                if (npc == NPCID.WitchDoctor)
-                {
-                    store.Add(ItemID.Stake);
-                    store.Add(ItemID.Nail);
-                }
-                if (npc == NPCID.GoblinTinkerer)
-                {
-                    store.Add(ItemID.TinkerersWorkshop);
-                    store.Add(ItemID.Toolbelt);
-                }
-                if (npc == NPCID.Merchant)
-                {
-                    store.Add(ItemID.Sickle);
-                    store.Add(ItemID.BugNet);
-                    store.Add(ItemID.PiggyBank);
-                    store.Add(ItemID.LesserHealingPotion);
-                    store.Add(ItemID.LesserManaPotion);
-                }
-                if (npc == NPCID.Steampunker)
-                {
-                    store.Add(ItemID.ExplosivePowder);
-                    store.Add(ItemID.Clentaminator);
-                    store.Add(ItemID.GreenSolution);
-                    store.Add(ItemID.Teleporter);
-                }
-                if (npc == NPCID.Dryad)
-                {
-                    store.Add(ItemID.PurificationPowder);
-                }
-                if (npc == NPCID.Truffle)
-                {
-                    store.Add(ItemID.DarkBlueSolution);
-                    store.Add(ItemID.BlueSolution);
-                    store.Add(ItemID.Autohammer);
-                }
-                if (npc == NPCID.Wizard)
-                {
-                    store.Add(ItemID.CrystalBall);
-                    store.Add(ItemID.SpellTome);
-                }
-                if (npc == NPCID.Cyborg)
-                {
-                    store.Add(ItemID.RocketI);
-                    store.Add(ItemID.RocketIII);
-                }
-                TradeTable.Add(npc, store.ToArray());
+                continue;
             }
+            var store = new List<int>();
+            for (var i = 0; i < 8; i++)
+            {
+                var itemIndex = _random.Next(itemCount);
+                var item = items[itemIndex];
+                while (store.Contains(item))
+                {
+                    itemIndex = _random.Next(itemCount);
+                    item = items[itemIndex];
+                }
+                store.Add(item);
+            }
+            if (npc == NPCID.SkeletonMerchant)
+            {
+                store.Add(ItemID.YoYoGlove);
+            }
+            if (npc == NPCID.ArmsDealer)
+            {
+                store.Add(ItemID.MusketBall);
+                store.Add(ItemID.Minishark);
+                store.Add(ItemID.IllegalGunParts);
+                store.Add(ItemID.StyngerBolt);
+                store.Add(ItemID.CandyCorn);
+                store.Add(ItemID.ExplosiveJackOLantern);
+            }
+            if (npc == NPCID.WitchDoctor)
+            {
+                store.Add(ItemID.Stake);
+                store.Add(ItemID.Nail);
+            }
+            if (npc == NPCID.GoblinTinkerer)
+            {
+                store.Add(ItemID.TinkerersWorkshop);
+                store.Add(ItemID.Toolbelt);
+            }
+            if (npc == NPCID.Merchant)
+            {
+                store.Add(ItemID.Sickle);
+                store.Add(ItemID.BugNet);
+                store.Add(ItemID.PiggyBank);
+                store.Add(ItemID.LesserHealingPotion);
+                store.Add(ItemID.LesserManaPotion);
+            }
+            if (npc == NPCID.Steampunker)
+            {
+                store.Add(ItemID.ExplosivePowder);
+                store.Add(ItemID.Clentaminator);
+                store.Add(ItemID.GreenSolution);
+                store.Add(ItemID.Teleporter);
+            }
+            if (npc == NPCID.Dryad)
+            {
+                store.Add(ItemID.PurificationPowder);
+            }
+            if (npc == NPCID.Truffle)
+            {
+                store.Add(ItemID.DarkBlueSolution);
+                store.Add(ItemID.BlueSolution);
+                store.Add(ItemID.Autohammer);
+            }
+            if (npc == NPCID.Wizard)
+            {
+                store.Add(ItemID.CrystalBall);
+                store.Add(ItemID.SpellTome);
+            }
+            if (npc == NPCID.Cyborg)
+            {
+                store.Add(ItemID.RocketI);
+                store.Add(ItemID.RocketIII);
+            }
+            tradeTable.Add(npc, store.ToArray());
         }
     }
 }
